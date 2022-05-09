@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'boardData.dart';
 
 void main() {
@@ -22,66 +24,80 @@ class AppThemeData {
   }
 }
 
-
-class Square {
-  String label = "Hello";
-}
-class BoardSetup {
-  List position = [<Square>[]];
-
-  BoardSetup () {
-    position.add([]);
-    position[0].add([]);
-    position[0][0].label = "";
-
-    print(position);
-  }
-}
-
 Container DrawBoard() {
   List<Row> board = [];
   List<Container> square = [];
 
-  String boardStartPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  String boardStartPosition =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   BoardData boardData = BoardData();
   boardData.SetPosition(boardStartPosition);
 
-  String label = "";
+  AssetImage whiteKingImg = AssetImage('assets/1x/whiteKingmdpi.png');
+  AssetImage whiteQueenImg = AssetImage('assets/1x/whiteQueenmdpi.png');
+  AssetImage whiteBishopImg = AssetImage('assets/1x/whiteBishopmdpi.png');
+  AssetImage whiteKnightImg = AssetImage('assets/1x/whiteKnightmdpi.png');
+  AssetImage whiteRookImg = AssetImage('assets/1x/whiteRookmdpi.png');
+  AssetImage whitePawnImg = AssetImage('assets/1x/whitePawnmdpi.png');
+  AssetImage blackKingImg = AssetImage('assets/1x/blackKingmdpi.png');
+  AssetImage blackQueenImg = AssetImage('assets/1x/blackQueenmdpi.png');
+  AssetImage blackBishopImg = AssetImage('assets/1x/blackBishopmdpi.png');
+  AssetImage blackKnightImg = AssetImage('assets/1x/blackKnightmdpi.png');
+  AssetImage blackRookImg = AssetImage('assets/1x/blackRookmdpi.png');
+  AssetImage blackPawnImg = AssetImage('assets/1x/blackPawnmdpi.png');
+  AssetImage emptyImg = AssetImage('assets/empty.png');
+
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
 
   // generate 64 containers
   // into 8 rows (8*8)
   int row = 7;
-  int col = colA;
 
   while (row >= 0) {
     // build rows from A8 down to A1
     int col = colA;
     square = []; // reset list
     while (col <= colH) {
-      // label - A1 - A8, B1 - B8, etc.
-      // String label = String.fromCharCode(col).toString() + (row + 1).toString();
-      String contents = boardData.board[row][col-colA].contents;
+      late AssetImage thisPiece;
+      String contents = boardData.board[row][col - colA].contents;
+
+      if (contents == "K") thisPiece = whiteKingImg;
+      if (contents == "Q") thisPiece = whiteQueenImg;
+      if (contents == "R") thisPiece = whiteRookImg;
+      if (contents == "B") thisPiece = whiteBishopImg;
+      if (contents == "N") thisPiece = whiteKnightImg;
+      if (contents == "P") thisPiece = whitePawnImg;
+
+      if (contents == "k") thisPiece = blackKingImg;
+      if (contents == "q") thisPiece = blackQueenImg;
+      if (contents == "r") thisPiece = blackRookImg;
+      if (contents == "b") thisPiece = blackBishopImg;
+      if (contents == "n") thisPiece = blackKnightImg;
+      if (contents == "p") thisPiece = blackPawnImg;
+
+      if (contents == " ") thisPiece = emptyImg;
 
       Color color = appThemeData.lightSquare;
       if ((row + col) % 2 != 0) color = appThemeData.darkSquare;
 
       square.add(
         Container(
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.fromLTRB(0,0,0,0),
-          height: appThemeData.squareHeight,
-          width: appThemeData.squareWidth,
-          color: color,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-          Text(contents, textScaleFactor: 2,),
-          ],
-          )
-        ),
+            alignment: Alignment.bottomCenter,
+            height: appThemeData.squareHeight,
+            width: appThemeData.squareWidth,
+            color: color,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image(
+                  image: thisPiece,
+                  height: appThemeData.squareHeight,
+                  width: appThemeData.squareWidth,
+                ),
+              ],
+            )),
       );
       col++;
     }
@@ -95,16 +111,7 @@ Container DrawBoard() {
     row--;
   }
 
-  // set pieces
-
   return Container(
-    //margin: const EdgeInsets.all(1.0),
-    //padding: const EdgeInsets.all(10.0),
-   // width: appThemeData.squareWidth * 9,
-    //alignment: Alignment.center,
-    // decoration: BoxDecoration(
-    //   border: Border.all(color: Colors.blueAccent),
-    // ),
     child: Column(children: board),
   );
 }
@@ -114,10 +121,6 @@ var appThemeData = AppThemeData();
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var rowCnt = 3;
-
-    double boxWidth = double.infinity;
-
     appThemeData.darkSquare = Color.fromRGBO(0x99, 0x99, 0xcc, 100);
     appThemeData.lightSquare = Color.fromRGBO(0xdd, 0xdd, 0xff, 100);
     appThemeData.squareHeight = 40;
@@ -128,7 +131,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Chess'),
+          title: const Text('Chess Trainer'),
         ),
         body: SafeArea(
           child: Column(

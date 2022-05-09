@@ -1,21 +1,18 @@
 import "dart:io";
 
-void main() {
-  var boardData = BoardData();
-  boardData.SetPosition(
-      "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
-  boardData.printBoard();
-
-  boardData.SetPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-  boardData.printBoard();
-
-  boardData.SetPosition("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");
-  boardData.printBoard();
-}
-
 class BoardData {
   List<List> board = [];
   List<Square> column = [];
+
+  String playersTurn = "w";
+
+  bool whiteCastleKingSide = false;
+  bool whiteCastleQueenSide = false;
+  bool blackCastleKingSide = false;
+  bool blackCastleQueenSide = false;
+  String enPassant = "-";
+  int HalfMoveClock = 0;
+  int FullMoveNumber = 1;
 
   Map piece = {
     "WhiteKing": "\u2654",
@@ -44,83 +41,172 @@ class BoardData {
     }
   }
 
+  Move(String myMove) {
+    // remove optional spaces
+    myMove = myMove.replaceAll(' ', '');
+    myMove = myMove.toUpperCase();
+
+    List<String> parms = myMove.split("");
+
+    // ERROR CHECKING
+    if (parms.length != 4) return;
+
+    if (("ABCDEFGH".contains(parms[0]) == false) ||
+        ("12345678".contains(parms[1]) == false) ||
+        ("ABCDEFGH".contains(parms[2]) == false) ||
+        ("12345678".contains(parms[3]) == false)) {
+      return;
+    }
+
+    int fromY = parms[0].codeUnits.first - 'A'.codeUnits.first;
+    int fromX = int.parse(parms[1]) - 1;
+    int toY = parms[2].codeUnits.first - 'A'.codeUnits.first;
+    int toX = int.parse(parms[3]) - 1;
+
+    MakeMove(fromX, fromY, toX, toY);
+  }
+
+  MakeMove(int fromX, int fromY, int toX, int toY) {
+    board[toX][toY].contents = board[fromX][fromY].contents;
+
+    board[fromX][fromY].contents = piece['Empty'];
+  }
+
   void SetPosition(String fen) {
     int row = 7;
     int col = 0;
-    bool done = false;
 
-    var fenArray = fen.split('');
+    var fenArray = fen.split(' ');
+    var fenPos = fenArray[0].split('');
 
-    fenArray.forEach((element) {
-      if (!done) {
-        switch (element) {
-          case "/":
-            row--;
-            col = 0;
-            if (row < 0) done = true;
-            break;
-          case " ":
-            done = true;
-            break;
-          case 'K':
-            board[row][col++].contents = piece['WhiteKing'];
-            break;
-          case 'Q':
-            board[row][col++].contents = piece['WhiteQueen'];
-            break;
-          case 'B':
-            board[row][col++].contents = piece['WhiteBishop'];
-            break;
-          case 'N':
-            board[row][col++].contents = piece['WhiteKnight'];
-            break;
-          case 'R':
-            board[row][col++].contents = piece['WhiteRook'];
-            break;
-          case 'P':
-            board[row][col++].contents = piece['WhitePawn'];
-            break;
-          case 'k':
-            board[row][col++].contents = piece['BlackKing'];
-            break;
-          case 'q':
-            board[row][col++].contents = piece['BlackQueen'];
-            break;
-          case 'b':
-            board[row][col++].contents = piece['BlackBishop'];
-            break;
-          case 'n':
-            board[row][col++].contents = piece['BlackKnight'];
-            break;
-          case 'r':
-            board[row][col++].contents = piece['BlackRook'];
-            break;
-          case 'p':
-            board[row][col++].contents = piece['BlackPawn'];
-            break;
-          default: // numerics
-            int x1 = 0;
-            int x2 = int.parse(element);
+    fenPos.forEach((element) {
+      switch (element) {
+        case "/":
+          row--;
+          col = 0;
+          break;
 
-            while (x1 < x2) {
-              board[row][col++].contents = piece['Empty'];
-              x1++;
-            }
-        }
-        ;
+        case 'K':
+        case 'Q':
+        case 'B':
+        case 'N':
+        case 'R':
+        case 'P':
+        case 'k':
+        case 'q':
+        case 'b':
+        case 'n':
+        case 'r':
+        case 'p':
+          board[row][col++].contents = element;
+          break;
+
+        default: // numerics
+          int x1 = 0;
+          int x2 = int.parse(element);
+
+          while (x1 < x2) {
+            board[row][col++].contents = " ";
+            x1++;
+          }
       }
+      ; // end switch
     });
+
+    if (fenArray.length != 6) return;
+
+    if (fenArray[1] == "w") {
+      playersTurn = "w";
+    } else {
+      playersTurn = "b";
+    }
+
+    whiteCastleKingSide = whiteCastleQueenSide =
+        blackCastleKingSide = blackCastleQueenSide = false;
+
+    if (fenArray[2].contains("K")) whiteCastleKingSide = true;
+    if (fenArray[2].contains("Q")) whiteCastleQueenSide = true;
+    if (fenArray[2].contains("k")) blackCastleKingSide = true;
+    if (fenArray[2].contains("q")) blackCastleQueenSide = true;
+
+    enPassant = fenArray[3];
+    HalfMoveClock = int.parse(fenArray[4]);
+    FullMoveNumber = int.parse(fenArray[5]);
   }
 
   printBoard() {
-    print("---------------------------------");
+    print("   ---------------------------------");
     for (var y = 7; y >= 0; y--) {
+      stdout.write(" ${y + 1} ");
       for (var x = 0; x < 8; x++) {
-        stdout.write("| ${board[y][x].contents} ");
+        stdout.write("| ");
+        if (board[y][x].contents == "K") stdout.write(piece['WhiteKing']);
+        if (board[y][x].contents == "Q") stdout.write(piece['WhiteQueen']);
+        if (board[y][x].contents == "B") stdout.write(piece['WhiteBishop']);
+        if (board[y][x].contents == "N") stdout.write(piece['WhiteKnight']);
+        if (board[y][x].contents == "R") stdout.write(piece['WhiteRook']);
+        if (board[y][x].contents == "P") stdout.write(piece['WhitePawn']);
+
+        if (board[y][x].contents == "k") stdout.write(piece['BlackKing']);
+        if (board[y][x].contents == "q") stdout.write(piece['BlackQueen']);
+        if (board[y][x].contents == "b") stdout.write(piece['BlackBishop']);
+        if (board[y][x].contents == "n") stdout.write(piece['BlackKnight']);
+        if (board[y][x].contents == "r") stdout.write(piece['BlackRook']);
+        if (board[y][x].contents == "p") stdout.write(piece['BlackPawn']);
+        if (board[y][x].contents == " ") stdout.write(piece['Empty']);
+
+        stdout.write(" ");
       }
       print("|");
-      print("---------------------------------");
+      print("   ---------------------------------");
     }
+    print("     A   B   C   D   E   F   G   H  \n");
+
+    stdout.write("Turn:${playersTurn} ");
+
+    stdout.write("CA:");
+    if (whiteCastleKingSide) stdout.write("K");
+    if (whiteCastleQueenSide) stdout.write("Q");
+    if (blackCastleKingSide) stdout.write("k");
+    if (blackCastleQueenSide) stdout.write("q");
+    stdout.write(" EP:$enPassant");
+    stdout.write(" MV:$HalfMoveClock/$FullMoveNumber");
+    print("");
+  }
+
+  String get fen {
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+    var fenStr = "";
+
+    for (int y = 7; y >= 0; y--) {
+      for (int x = 0; x <= 7; x++) {
+        if (board[y][x].contents == ' ') {
+          fenStr += " ";
+        } else {
+          fenStr += board[y][x].contents;
+        }
+      }
+      if (y > 0) fenStr += "/";
+      fenStr = fenStr.replaceAll("        ", "8");
+      fenStr = fenStr.replaceAll("       ", "7");
+      fenStr = fenStr.replaceAll("      ", "6");
+      fenStr = fenStr.replaceAll("     ", "5");
+      fenStr = fenStr.replaceAll("    ", "4");
+      fenStr = fenStr.replaceAll("   ", "3");
+      fenStr = fenStr.replaceAll("  ", "2");
+      fenStr = fenStr.replaceAll(" ", "1");
+    }
+
+    fenStr += " ${playersTurn} ";
+
+    if (whiteCastleKingSide) fenStr += "K";
+    if (whiteCastleQueenSide) fenStr += "Q";
+    if (blackCastleKingSide) fenStr += "k";
+    if (blackCastleQueenSide) fenStr += "q";
+
+    fenStr += " ${enPassant} ${HalfMoveClock} ${FullMoveNumber}";
+
+    return fenStr;
   }
 }
 
@@ -137,8 +223,6 @@ class Square {
     _label = col + row;
 
     if ((rowIndex + colIndex) % 2 == 0) lightSquare = false;
-
-    //print("Label: $_label $lightSquare");
   }
 
   String get row {
