@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'boardData.dart';
+import 'chessPuzzles.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,14 +26,9 @@ class AppThemeData {
   }
 }
 
-Container DrawBoard() {
+Container DrawBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
-
-  String boardStartPosition =
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-  BoardData boardData = BoardData();
-  boardData.SetPosition(boardStartPosition);
 
   AssetImage whiteKingImg = AssetImage('assets/1x/whiteKingmdpi.png');
   AssetImage whiteQueenImg = AssetImage('assets/1x/whiteQueenmdpi.png');
@@ -118,7 +115,37 @@ Container DrawBoard() {
 
 var appThemeData = AppThemeData();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  BoardData boardData = BoardData();
+  ChessPuzzles chessPuzzles = ChessPuzzles();
+
+  String boardStartPosition =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  String puzzleFile = "assets/puzzles.csv";
+
+  _MyAppState() {
+    DesktopWindow.setWindowSize(Size(700,1000));
+
+    boardData.SetPosition(boardStartPosition);
+    chessPuzzles.Load(puzzleFile);
+  }
+
+  String _Pressed = '';
+  void _onClick(String Pressed) {
+    _Pressed = Pressed;
+    setState(() {
+      if (Pressed == 'Next') boardData.SetPosition(chessPuzzles.NextPuzzle());
+      if (Pressed == 'Stop') boardData.SetPosition(boardStartPosition);
+      if (Pressed == 'Settings')
+        testWindowFunctions();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     appThemeData.darkSquare = Color.fromRGBO(0x99, 0x99, 0xcc, 100);
@@ -155,11 +182,37 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
-              DrawBoard(),
+              DrawBoard(boardData),
             ],
           ),
         ),
+        persistentFooterButtons: <Widget>[
+          new TextButton(
+              onPressed: () => _onClick('Next'),
+              child: const Text('New Puzzle')),
+          new TextButton(
+              onPressed: () => _onClick('Stop'),
+              child: const Text('Reset')),
+          new IconButton(
+              icon: new Icon(Icons.settings),
+              onPressed: () => _onClick('Settings')),
+        ],
       ),
     );
   }
+}
+
+Future testWindowFunctions() async {
+  Size size = await DesktopWindow.getWindowSize();
+  print(size);
+  await DesktopWindow.setWindowSize(Size(700,1000));
+
+  await DesktopWindow.setMinWindowSize(Size(700,800));
+  await DesktopWindow.setMaxWindowSize(Size(800,800));
+
+  await DesktopWindow.resetMaxWindowSize();
+  await DesktopWindow.toggleFullScreen();
+  bool isFullScreen = await DesktopWindow.getFullScreen();
+  await DesktopWindow.setFullScreen(true);
+  await DesktopWindow.setFullScreen(false);
 }
