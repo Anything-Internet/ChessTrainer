@@ -174,13 +174,13 @@ class _MyAppState extends State<MyApp> {
                         color: turnColor,
                         shape: BoxShape.circle,
                       ),),
-                    Text(
+                    const Text(
                       "Player 1",
                       textScaleFactor: 1.5,
                     ),
 
 
-                    Text(
+                    const Text(
                       "Player 2",
                       textScaleFactor: 1.5,
                     ),
