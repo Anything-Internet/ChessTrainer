@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
   String puzzleFile = "assets/puzzles.csv";
 
   _MyAppState() {
-    DesktopWindow.setWindowSize(Size(700,1000));
+    DesktopWindow.setWindowSize(Size(700, 1000));
 
     boardData.SetPosition(boardStartPosition);
     chessPuzzles.loadPuzzles(puzzleFile);
@@ -134,7 +134,8 @@ class _MyAppState extends State<MyApp> {
 
   void _onClick(String Pressed) {
     setState(() {
-      if (Pressed == 'Next') boardData.SetPosition(chessPuzzles.getNextPuzzle());
+      if (Pressed == 'Next')
+        boardData.SetPosition(chessPuzzles.getNextPuzzle());
       if (Pressed == 'Stop') boardData.SetPosition(boardStartPosition);
     });
   }
@@ -147,7 +148,7 @@ class _MyAppState extends State<MyApp> {
     appThemeData.squareWidth = 40;
     Color turnColor = Colors.white;
 
-    if(boardData.playersTurn == "b") turnColor = Colors.black;
+    if (boardData.playersTurn == "b") turnColor = Colors.black;
 
     return MaterialApp(
       theme: appThemeData.materialTheme,
@@ -166,20 +167,19 @@ class _MyAppState extends State<MyApp> {
                 color: Colors.red,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children:  [
+                  children: [
                     Container(
                       width: 20.0,
                       height: 20.0,
                       decoration: BoxDecoration(
                         color: turnColor,
                         shape: BoxShape.circle,
-                      ),),
+                      ),
+                    ),
                     const Text(
                       "Player 1",
                       textScaleFactor: 1.5,
                     ),
-
-
                     const Text(
                       "Player 2",
                       textScaleFactor: 1.5,
@@ -196,8 +196,7 @@ class _MyAppState extends State<MyApp> {
               onPressed: () => _onClick('Next'),
               child: const Text('New Puzzle')),
           TextButton(
-              onPressed: () => _onClick('Stop'),
-              child: const Text('Reset')),
+              onPressed: () => _onClick('Stop'), child: const Text('Reset')),
           IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () => _onClick('Settings')),
