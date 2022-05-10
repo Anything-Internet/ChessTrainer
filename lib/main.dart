@@ -1,11 +1,10 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'boardData.dart';
+import 'chessPuzzles.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class AppThemeData {
@@ -24,28 +23,23 @@ class AppThemeData {
   }
 }
 
-Container DrawBoard() {
+Column drawChessBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
 
-  String boardStartPosition =
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-  BoardData boardData = BoardData();
-  boardData.SetPosition(boardStartPosition);
-
-  AssetImage whiteKingImg = AssetImage('assets/1x/whiteKingmdpi.png');
-  AssetImage whiteQueenImg = AssetImage('assets/1x/whiteQueenmdpi.png');
-  AssetImage whiteBishopImg = AssetImage('assets/1x/whiteBishopmdpi.png');
-  AssetImage whiteKnightImg = AssetImage('assets/1x/whiteKnightmdpi.png');
-  AssetImage whiteRookImg = AssetImage('assets/1x/whiteRookmdpi.png');
-  AssetImage whitePawnImg = AssetImage('assets/1x/whitePawnmdpi.png');
-  AssetImage blackKingImg = AssetImage('assets/1x/blackKingmdpi.png');
-  AssetImage blackQueenImg = AssetImage('assets/1x/blackQueenmdpi.png');
-  AssetImage blackBishopImg = AssetImage('assets/1x/blackBishopmdpi.png');
-  AssetImage blackKnightImg = AssetImage('assets/1x/blackKnightmdpi.png');
-  AssetImage blackRookImg = AssetImage('assets/1x/blackRookmdpi.png');
-  AssetImage blackPawnImg = AssetImage('assets/1x/blackPawnmdpi.png');
-  AssetImage emptyImg = AssetImage('assets/empty.png');
+  AssetImage whiteKingImg = const AssetImage('assets/1x/whiteKingmdpi.png');
+  AssetImage whiteQueenImg = const AssetImage('assets/1x/whiteQueenmdpi.png');
+  AssetImage whiteBishopImg = const AssetImage('assets/1x/whiteBishopmdpi.png');
+  AssetImage whiteKnightImg = const AssetImage('assets/1x/whiteKnightmdpi.png');
+  AssetImage whiteRookImg = const AssetImage('assets/1x/whiteRookmdpi.png');
+  AssetImage whitePawnImg = const AssetImage('assets/1x/whitePawnmdpi.png');
+  AssetImage blackKingImg = const AssetImage('assets/1x/blackKingmdpi.png');
+  AssetImage blackQueenImg = const AssetImage('assets/1x/blackQueenmdpi.png');
+  AssetImage blackBishopImg = const AssetImage('assets/1x/blackBishopmdpi.png');
+  AssetImage blackKnightImg = const AssetImage('assets/1x/blackKnightmdpi.png');
+  AssetImage blackRookImg = const AssetImage('assets/1x/blackRookmdpi.png');
+  AssetImage blackPawnImg = const AssetImage('assets/1x/blackPawnmdpi.png');
+  AssetImage emptyImg = const AssetImage('assets/empty.png');
 
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
@@ -111,20 +105,49 @@ Container DrawBoard() {
     row--;
   }
 
-  return Container(
-    child: Column(children: board),
-  );
+  return Column(children: board);
 }
 
 var appThemeData = AppThemeData();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  BoardData boardData = BoardData();
+  ChessPuzzles chessPuzzles = ChessPuzzles();
+
+  String boardStartPosition =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  String puzzleFile = "assets/puzzles.csv";
+
+  _MyAppState() {
+    DesktopWindow.setWindowSize(Size(700,1000));
+
+    boardData.SetPosition(boardStartPosition);
+    chessPuzzles.loadPuzzles(puzzleFile);
+  }
+
+  void _onClick(String Pressed) {
+    setState(() {
+      if (Pressed == 'Next') boardData.SetPosition(chessPuzzles.getNextPuzzle());
+      if (Pressed == 'Stop') boardData.SetPosition(boardStartPosition);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    appThemeData.darkSquare = Color.fromRGBO(0x99, 0x99, 0xcc, 100);
-    appThemeData.lightSquare = Color.fromRGBO(0xdd, 0xdd, 0xff, 100);
+    appThemeData.darkSquare = const Color.fromRGBO(0x99, 0x99, 0xcc, 100);
+    appThemeData.lightSquare = const Color.fromRGBO(0xdd, 0xdd, 0xff, 100);
     appThemeData.squareHeight = 40;
     appThemeData.squareWidth = 40;
+    Color turnColor = Colors.white;
+
+    if(boardData.playersTurn == "b") turnColor = Colors.black;
 
     return MaterialApp(
       theme: appThemeData.materialTheme,
@@ -143,11 +166,20 @@ class MyApp extends StatelessWidget {
                 color: Colors.red,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children:  [
+                    Container(
+                      width: 20.0,
+                      height: 20.0,
+                      decoration: BoxDecoration(
+                        color: turnColor,
+                        shape: BoxShape.circle,
+                      ),),
                     Text(
                       "Player 1",
                       textScaleFactor: 1.5,
                     ),
+
+
                     Text(
                       "Player 2",
                       textScaleFactor: 1.5,
@@ -155,11 +187,37 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
-              DrawBoard(),
+              drawChessBoard(boardData),
             ],
           ),
         ),
+        persistentFooterButtons: <Widget>[
+          TextButton(
+              onPressed: () => _onClick('Next'),
+              child: const Text('New Puzzle')),
+          TextButton(
+              onPressed: () => _onClick('Stop'),
+              child: const Text('Reset')),
+          IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => _onClick('Settings')),
+        ],
       ),
     );
   }
 }
+
+// Future testWindowFunctions() async {
+//   Size size = await DesktopWindow.getWindowSize();
+//   print(size);
+//   await DesktopWindow.setWindowSize(Size(700,1000));
+//
+//   await DesktopWindow.setMinWindowSize(Size(700,800));
+//   await DesktopWindow.setMaxWindowSize(Size(800,800));
+//
+//   await DesktopWindow.resetMaxWindowSize();
+//   await DesktopWindow.toggleFullScreen();
+//   bool isFullScreen = await DesktopWindow.getFullScreen();
+//   await DesktopWindow.setFullScreen(true);
+//   await DesktopWindow.setFullScreen(false);
+// }
