@@ -199,7 +199,8 @@ class _MyAppState extends State<MyApp> {
               onPressed: () => _onClick('Next'),
               child: const Text('New Puzzle')),
           TextButton(
-              onPressed: () => _onClick('Stop'), child: const Text('Reset')),
+              onPressed: () => _onClick('Stop'),
+              child: const Text('Reset')),
           IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () => _onClick('Settings')),
