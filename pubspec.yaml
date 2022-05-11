@@ -66,6 +66,7 @@ flutter:
   assets:
     - assets/
     - assets/1x/
+    - assets/set2_1x/images/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

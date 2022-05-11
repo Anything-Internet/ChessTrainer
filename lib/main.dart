@@ -27,19 +27,20 @@ Column drawChessBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
 
-  AssetImage whiteKingImg = const AssetImage('assets/1x/whiteKingmdpi.png');
-  AssetImage whiteQueenImg = const AssetImage('assets/1x/whiteQueenmdpi.png');
-  AssetImage whiteBishopImg = const AssetImage('assets/1x/whiteBishopmdpi.png');
-  AssetImage whiteKnightImg = const AssetImage('assets/1x/whiteKnightmdpi.png');
-  AssetImage whiteRookImg = const AssetImage('assets/1x/whiteRookmdpi.png');
-  AssetImage whitePawnImg = const AssetImage('assets/1x/whitePawnmdpi.png');
-  AssetImage blackKingImg = const AssetImage('assets/1x/blackKingmdpi.png');
-  AssetImage blackQueenImg = const AssetImage('assets/1x/blackQueenmdpi.png');
-  AssetImage blackBishopImg = const AssetImage('assets/1x/blackBishopmdpi.png');
-  AssetImage blackKnightImg = const AssetImage('assets/1x/blackKnightmdpi.png');
-  AssetImage blackRookImg = const AssetImage('assets/1x/blackRookmdpi.png');
-  AssetImage blackPawnImg = const AssetImage('assets/1x/blackPawnmdpi.png');
+  AssetImage whiteKingImg = const AssetImage('assets/set2_1x/images/whiteKing.png');
+  AssetImage whiteQueenImg = const AssetImage('assets/set2_1x/images/whiteQueen.png');
+  AssetImage whiteBishopImg = const AssetImage('assets/set2_1x/images/whiteBishop.png');
+  AssetImage whiteKnightImg = const AssetImage('assets/set2_1x/images/whiteKnight.png');
+  AssetImage whiteRookImg = const AssetImage('assets/set2_1x/images/whiteRook.png');
+  AssetImage whitePawnImg = const AssetImage('assets/set2_1x/images/whitePawn.png');
+  AssetImage blackKingImg = const AssetImage('assets/set2_1x/images/blackKing.png');
+  AssetImage blackQueenImg = const AssetImage('assets/set2_1x/images/blackQueen.png');
+  AssetImage blackBishopImg = const AssetImage('assets/set2_1x/images/blackBishop.png');
+  AssetImage blackKnightImg = const AssetImage('assets/set2_1x/images/blackKnight.png');
+  AssetImage blackRookImg = const AssetImage('assets/set2_1x/images/blackRook.png');
+  AssetImage blackPawnImg = const AssetImage('assets/set2_1x/images/blackPawn.png');
   AssetImage emptyImg = const AssetImage('assets/empty.png');
+  AssetImage woodTileImg = const AssetImage('assets/set2_1x/images/woodTile.png');
 
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
@@ -77,21 +78,43 @@ Column drawChessBoard(BoardData boardData) {
 
       square.add(
         Container(
-            alignment: Alignment.bottomCenter,
-            height: appThemeData.squareHeight,
-            width: appThemeData.squareWidth,
-            color: color,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image(
-                  image: thisPiece,
-                  height: appThemeData.squareHeight,
-                  width: appThemeData.squareWidth,
-                ),
-              ],
-            )),
+          alignment: Alignment.bottomCenter,
+          height: appThemeData.squareHeight,
+          width: appThemeData.squareWidth,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: woodTileImg,
+              opacity: 0.10,
+              fit: BoxFit.cover,
+            ),
+
+            //backgroundBlendMode: BlendMode.hardLight,
+             gradient: RadialGradient(
+               radius: 0.9,
+               colors: [
+                 color.withOpacity(0.3),
+                 color,
+               ],
+             ),
+          ),
+          child: Draggable(
+            child: Image(
+              image: thisPiece,
+              height: appThemeData.squareHeight,
+              width: appThemeData.squareWidth,
+            ),
+            feedback: Image(
+              image: thisPiece,
+              height: appThemeData.squareHeight * 1.5,
+              width: appThemeData.squareWidth * 1.5,
+            ),
+            data: [
+              contents,
+              row,
+              col,
+            ],
+          ),
+        ),
       );
       col++;
     }
@@ -146,7 +169,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     appThemeData.darkSquare = const Color.fromRGBO(0x99, 0x99, 0xcc, 100);
-    appThemeData.lightSquare = const Color.fromRGBO(0xdd, 0xdd, 0xff, 100);
+    appThemeData.lightSquare = const Color.fromRGBO(0xee, 0xee, 0xff, 100);
     appThemeData.squareHeight = 40;
     appThemeData.squareWidth = 40;
     Color turnColor = Colors.white;
@@ -199,8 +222,7 @@ class _MyAppState extends State<MyApp> {
               onPressed: () => _onClick('Next'),
               child: const Text('New Puzzle')),
           TextButton(
-              onPressed: () => _onClick('Stop'),
-              child: const Text('Reset')),
+              onPressed: () => _onClick('Stop'), child: const Text('Reset')),
           IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () => _onClick('Settings')),
