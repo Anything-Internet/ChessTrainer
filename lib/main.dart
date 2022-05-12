@@ -8,17 +8,42 @@ void main() {
 }
 
 class AppThemeData {
+  String commonPath = "assets/";
+  String puzzlePath = "assets/";
+  String chessPiecePath = "assets/set2_1x/images/";
+  String boardTilesPath = "assets/set2_1x/images/";
+
+  String normalStartPosition =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
   late double squareWidth;
   late double squareHeight;
   late Color darkSquare;
   late Color lightSquare;
   late Color themeColor;
 
+  late AssetImage whiteKing;
+  late AssetImage whiteQueen;
+  late AssetImage whiteBishop;
+  late AssetImage whiteKnight;
+  late AssetImage whiteRook;
+  late AssetImage whitePawn;
+  late AssetImage blackKing;
+  late AssetImage blackQueen;
+  late AssetImage blackBishop;
+  late AssetImage blackKnight;
+  late AssetImage blackRook;
+  late AssetImage blackPawn;
+  late AssetImage noPiece;
+  late AssetImage tilePattern;
+  late String puzzleFile;
+
   AppThemeData() {
     squareHeight = squareWidth = 45;
     themeColor = Colors.deepPurple;
     darkSquare = const Color.fromRGBO(0x99, 0x99, 0xcc, 100);
     lightSquare = const Color.fromRGBO(0xee, 0xee, 0xff, 100);
+    loadAssets();
   }
 
   ThemeData get materialTheme {
@@ -26,39 +51,31 @@ class AppThemeData {
       primaryColor: themeColor,
     );
   }
+
+  loadAssets() {
+    whiteKing = AssetImage(chessPiecePath + 'whiteKing.png');
+    whiteQueen = AssetImage(chessPiecePath + 'whiteQueen.png');
+    whiteBishop = AssetImage(chessPiecePath + 'whiteBishop.png');
+    whiteKnight = AssetImage(chessPiecePath + 'whiteKnight.png');
+    whiteRook = AssetImage(chessPiecePath + 'whiteRook.png');
+    whitePawn = AssetImage(chessPiecePath + 'whitePawn.png');
+    blackKing = AssetImage(chessPiecePath + 'blackKing.png');
+    blackQueen = AssetImage(chessPiecePath + 'blackQueen.png');
+    blackBishop = AssetImage(chessPiecePath + 'blackBishop.png');
+    blackKnight = AssetImage(chessPiecePath + 'blackKnight.png');
+    blackRook = AssetImage(chessPiecePath + 'blackRook.png');
+    blackPawn = AssetImage(chessPiecePath + 'blackPawn.png');
+
+    noPiece = AssetImage(commonPath + 'empty.png');
+    tilePattern = AssetImage(boardTilesPath + 'woodTile.png');
+
+    puzzleFile = puzzlePath + 'puzzles.csv';
+  }
 }
 
 Column drawChessBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
-
-  AssetImage whiteKingImg =
-      const AssetImage('assets/set2_1x/images/whiteKing.png');
-  AssetImage whiteQueenImg =
-      const AssetImage('assets/set2_1x/images/whiteQueen.png');
-  AssetImage whiteBishopImg =
-      const AssetImage('assets/set2_1x/images/whiteBishop.png');
-  AssetImage whiteKnightImg =
-      const AssetImage('assets/set2_1x/images/whiteKnight.png');
-  AssetImage whiteRookImg =
-      const AssetImage('assets/set2_1x/images/whiteRook.png');
-  AssetImage whitePawnImg =
-      const AssetImage('assets/set2_1x/images/whitePawn.png');
-  AssetImage blackKingImg =
-      const AssetImage('assets/set2_1x/images/blackKing.png');
-  AssetImage blackQueenImg =
-      const AssetImage('assets/set2_1x/images/blackQueen.png');
-  AssetImage blackBishopImg =
-      const AssetImage('assets/set2_1x/images/blackBishop.png');
-  AssetImage blackKnightImg =
-      const AssetImage('assets/set2_1x/images/blackKnight.png');
-  AssetImage blackRookImg =
-      const AssetImage('assets/set2_1x/images/blackRook.png');
-  AssetImage blackPawnImg =
-      const AssetImage('assets/set2_1x/images/blackPawn.png');
-  AssetImage emptyImg = const AssetImage('assets/empty.png');
-  AssetImage woodTileImg =
-      const AssetImage('assets/set2_1x/images/woodTile.png');
 
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
@@ -75,21 +92,21 @@ Column drawChessBoard(BoardData boardData) {
       late AssetImage thisPiece;
       String contents = boardData.board[row][col - colA].contents;
 
-      if (contents == "K") thisPiece = whiteKingImg;
-      if (contents == "Q") thisPiece = whiteQueenImg;
-      if (contents == "R") thisPiece = whiteRookImg;
-      if (contents == "B") thisPiece = whiteBishopImg;
-      if (contents == "N") thisPiece = whiteKnightImg;
-      if (contents == "P") thisPiece = whitePawnImg;
+      if (contents == "K") thisPiece = appThemeData.whiteKing;
+      if (contents == "Q") thisPiece = appThemeData.whiteQueen;
+      if (contents == "R") thisPiece = appThemeData.whiteRook;
+      if (contents == "B") thisPiece = appThemeData.whiteBishop;
+      if (contents == "N") thisPiece = appThemeData.whiteKnight;
+      if (contents == "P") thisPiece = appThemeData.whitePawn;
 
-      if (contents == "k") thisPiece = blackKingImg;
-      if (contents == "q") thisPiece = blackQueenImg;
-      if (contents == "r") thisPiece = blackRookImg;
-      if (contents == "b") thisPiece = blackBishopImg;
-      if (contents == "n") thisPiece = blackKnightImg;
-      if (contents == "p") thisPiece = blackPawnImg;
+      if (contents == "k") thisPiece = appThemeData.blackKing;
+      if (contents == "q") thisPiece = appThemeData.blackQueen;
+      if (contents == "r") thisPiece = appThemeData.blackRook;
+      if (contents == "b") thisPiece = appThemeData.blackBishop;
+      if (contents == "n") thisPiece = appThemeData.blackKnight;
+      if (contents == "p") thisPiece = appThemeData.blackPawn;
 
-      if (contents == " ") thisPiece = emptyImg;
+      if (contents == " ") thisPiece = appThemeData.noPiece;
 
       Color color = appThemeData.lightSquare;
       if ((row + col) % 2 != 0) color = appThemeData.darkSquare;
@@ -103,7 +120,7 @@ Column drawChessBoard(BoardData boardData) {
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: woodTileImg,
+                  image: appThemeData.tilePattern,
                   opacity: 0.10,
                   fit: BoxFit.cover,
                 ),
@@ -166,15 +183,11 @@ class _MyAppState extends State<MyApp> {
   BoardData boardData = BoardData();
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
-  String boardStartPosition =
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-  String puzzleFile = "assets/puzzles.csv";
-
   _MyAppState() {
     DesktopWindow.setWindowSize(const Size(700, 1200));
 
-    boardData.SetPosition(boardStartPosition);
-    chessPuzzles.loadPuzzles(puzzleFile);
+    boardData.SetPosition(appThemeData.normalStartPosition);
+    chessPuzzles.loadPuzzles(appThemeData.puzzleFile);
   }
 
   void _onClick(String pressed) {
@@ -183,7 +196,7 @@ class _MyAppState extends State<MyApp> {
         boardData.SetPosition(chessPuzzles.getNextPuzzle());
       }
       if (pressed == 'Stop') {
-        boardData.SetPosition(boardStartPosition);
+        boardData.SetPosition(appThemeData.normalStartPosition);
       }
     });
   }
@@ -230,8 +243,8 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               ),
-              Row(children: [
-                Container(
+              Row(children: const [
+                SizedBox(
                   height: 10,
                 ),
               ]),
