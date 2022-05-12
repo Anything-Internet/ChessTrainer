@@ -76,6 +76,10 @@ class AppThemeData {
 Column drawChessBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
+  // Key and Size of the Text widget
+  final _widgetKey = GlobalKey();
+  //Size? _widgetSize = _widgetKey.currentContext!.size;
+  //appThemeData.squareWidth = (_widgetSize?.width as double) / 10;
 
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
@@ -180,6 +184,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   BoardData boardData = BoardData();
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
