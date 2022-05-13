@@ -11,7 +11,7 @@ class AppThemeData {
   String commonPath = "assets/";
   String puzzlePath = "assets/";
   String chessPiecePath = "assets/set2_1x/images/";
-  String boardTilesPath = "assets/set2_1x/images/";
+  String boardTilesPath = "assets/Textures/images/";
 
   String normalStartPosition =
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -35,7 +35,9 @@ class AppThemeData {
   late AssetImage blackRook;
   late AssetImage blackPawn;
   late AssetImage noPiece;
-  late AssetImage tilePattern;
+  late AssetImage woodGrainDark;
+  late AssetImage woodGrainLight;
+
   late String puzzleFile;
 
   AppThemeData() {
@@ -67,8 +69,8 @@ class AppThemeData {
     blackPawn = AssetImage(chessPiecePath + 'blackPawn.png');
 
     noPiece = AssetImage(commonPath + 'empty.png');
-    tilePattern = AssetImage(boardTilesPath + 'woodTile.png');
-
+    woodGrainDark = AssetImage(boardTilesPath + 'woodGrainDark.png');
+    woodGrainLight = AssetImage(boardTilesPath + 'woodGrainLight.png');
     puzzleFile = puzzlePath + 'puzzles.csv';
   }
 }
@@ -108,8 +110,8 @@ Column drawChessBoard(BoardData boardData) {
 
       if (contents == " ") thisPiece = appThemeData.noPiece;
 
-      Color color = appThemeData.lightSquare;
-      if ((row + col) % 2 != 0) color = appThemeData.darkSquare;
+      AssetImage squareBg = appThemeData.woodGrainLight;
+      if ((row + col) % 2 != 0) squareBg = appThemeData.woodGrainDark;
 
       square.add(
         Container(
@@ -120,18 +122,9 @@ Column drawChessBoard(BoardData boardData) {
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: appThemeData.tilePattern,
-                  opacity: 0.10,
+                  image: squareBg,
+                  //opacity: 0.10,
                   fit: BoxFit.cover,
-                ),
-
-                //backgroundBlendMode: BlendMode.hardLight,
-                gradient: RadialGradient(
-                  radius: 0.9,
-                  colors: [
-                    color.withOpacity(0.3),
-                    color,
-                  ],
                 ),
               ),
               child: Draggable(
@@ -180,12 +173,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   BoardData boardData = BoardData();
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
-    //DesktopWindow.setWindowSize(const Size(700, 1200));
+    DesktopWindow.setWindowSize(const Size(700, 1200));
     boardData.SetPosition(appThemeData.normalStartPosition);
     chessPuzzles.loadPuzzles(appThemeData.puzzleFile);
   }
@@ -247,8 +239,7 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   height: 10,
                 ),
-              ]
-              ),
+              ]),
               drawChessBoard(boardData),
             ],
           ),
