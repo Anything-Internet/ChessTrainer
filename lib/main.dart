@@ -76,10 +76,6 @@ class AppThemeData {
 Column drawChessBoard(BoardData boardData) {
   List<Row> board = [];
   List<Container> square = [];
-  // Key and Size of the Text widget
-  final _widgetKey = GlobalKey();
-  //Size? _widgetSize = _widgetKey.currentContext!.size;
-  //appThemeData.squareWidth = (_widgetSize?.width as double) / 10;
 
   int colA = "A".codeUnitAt(0);
   int colH = "H".codeUnitAt(0);
@@ -189,8 +185,7 @@ class _MyAppState extends State<MyApp> {
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
-    DesktopWindow.setWindowSize(const Size(700, 1200));
-
+    //DesktopWindow.setWindowSize(const Size(700, 1200));
     boardData.SetPosition(appThemeData.normalStartPosition);
     chessPuzzles.loadPuzzles(appThemeData.puzzleFile);
   }
@@ -252,7 +247,8 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   height: 10,
                 ),
-              ]),
+              ]
+              ),
               drawChessBoard(boardData),
             ],
           ),
