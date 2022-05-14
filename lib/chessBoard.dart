@@ -21,21 +21,21 @@ class ChessTheme {
   late AssetImage darkSquare;
 
   ChessTheme(String chessPiecePath, String boardTilesPath) {
-    whiteKing = AssetImage(chessPiecePath + 'whiteKing.png');
-    whiteQueen = AssetImage(chessPiecePath + 'whiteQueen.png');
-    whiteBishop = AssetImage(chessPiecePath + 'whiteBishop.png');
-    whiteKnight = AssetImage(chessPiecePath + 'whiteKnight.png');
-    whiteRook = AssetImage(chessPiecePath + 'whiteRook.png');
-    whitePawn = AssetImage(chessPiecePath + 'whitePawn.png');
-    blackKing = AssetImage(chessPiecePath + 'blackKing.png');
-    blackQueen = AssetImage(chessPiecePath + 'blackQueen.png');
-    blackBishop = AssetImage(chessPiecePath + 'blackBishop.png');
-    blackKnight = AssetImage(chessPiecePath + 'blackKnight.png');
-    blackRook = AssetImage(chessPiecePath + 'blackRook.png');
-    blackPawn = AssetImage(chessPiecePath + 'blackPawn.png');
-    noPiece = AssetImage(chessPiecePath + 'nothing.png');
-    darkSquare = AssetImage(boardTilesPath + 'darkSquare.png');
-    lightSquare = AssetImage(boardTilesPath + 'lightSquare.png');
+    whiteKing = AssetImage('${chessPiecePath}whiteKing.png');
+    whiteQueen = AssetImage('${chessPiecePath}whiteQueen.png');
+    whiteBishop = AssetImage('${chessPiecePath}whiteBishop.png');
+    whiteKnight = AssetImage('${chessPiecePath}whiteKnight.png');
+    whiteRook = AssetImage('${chessPiecePath}whiteRook.png');
+    whitePawn = AssetImage('${chessPiecePath}whitePawn.png');
+    blackKing = AssetImage('${chessPiecePath}blackKing.png');
+    blackQueen = AssetImage('${chessPiecePath}blackQueen.png');
+    blackBishop = AssetImage('${chessPiecePath}blackBishop.png');
+    blackKnight = AssetImage('${chessPiecePath}blackKnight.png');
+    blackRook = AssetImage('${chessPiecePath}blackRook.png');
+    blackPawn = AssetImage('${chessPiecePath}blackPawn.png');
+    noPiece = AssetImage('${chessPiecePath}nothing.png');
+    darkSquare = AssetImage('${boardTilesPath}darkSquare.png');
+    lightSquare = AssetImage('${boardTilesPath}lightSquare.png');
   }
 }
 
@@ -44,18 +44,19 @@ class ChessBoard {
   late ChessTheme chessTheme;
   late String normalStartPosition;
   late BoardData boardData;
-  // create data
-  // load theme
 
   ChessBoard(String chessPiecePath, String boardTilesPath) {
     boardData = BoardData();
     chessTheme = ChessTheme(chessPiecePath, boardTilesPath);
-    boardSquareSize = Size(50, 50);
+    boardSquareSize = const Size(50, 50);
   }
 
   get turnColor {
-    if (boardData.playersTurn == "b") return Colors.black;
-    else return Colors.white;
+    if (boardData.playersTurn == "b") {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
   }
 
   Column drawChessBoard() {
@@ -106,16 +107,10 @@ class ChessBoard {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: squareBg,
-                    //opacity: 0.10,
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Draggable(
-                  child: Image(
-                    image: thisPiece,
-                    height: boardSquareSize.height,
-                    width: boardSquareSize.width,
-                  ),
                   feedback: Image(
                     image: thisPiece,
                     height: boardSquareSize.height * 1.25,
@@ -126,6 +121,11 @@ class ChessBoard {
                     row,
                     col,
                   ],
+                  child: Image(
+                    image: thisPiece,
+                    height: boardSquareSize.height,
+                    width: boardSquareSize.width,
+                  ),
                 ),
               ),
             ),

@@ -6,7 +6,6 @@ main() {
   String puzzleFile = "assets/puzzles.csv";
   ChessPuzzles chessPuzzles = ChessPuzzles();
   chessPuzzles.loadPuzzles(puzzleFile);
-  //List<String> fen = chessPuzzles.GetFenArray();
 
   for (var x = 0; x < 5; x++) {
     debugPrint(chessPuzzles.getNextPuzzle());
@@ -51,7 +50,7 @@ class ChessPuzzles {
     int size = puzzles.length;
     int x = rnd.nextInt(size - 1);
 
-    print("Loading puzzle[$x]: ${puzzles[x].fen}");
+    debugPrint("Loading puzzle[$x]: ${puzzles[x].fen}");
     return puzzles[x].fen;
   }
 }
