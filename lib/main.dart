@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'boardData.dart';
+import 'package:chesstrainer/chessBoard.dart';
 import 'chessPuzzles.dart';
 
 void main() {
@@ -9,158 +9,25 @@ void main() {
 
 class AppThemeData {
   String commonPath = "assets/";
-  String puzzlePath = "assets/";
-  String chessPiecePath = "assets/set2_1x/images/";
-  String boardTilesPath = "assets/Textures/images/";
-
-  String normalStartPosition =
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
-  late double squareWidth;
-  late double squareHeight;
-  late Color darkSquare;
-  late Color lightSquare;
-  late Color themeColor;
-
-  late AssetImage whiteKing;
-  late AssetImage whiteQueen;
-  late AssetImage whiteBishop;
-  late AssetImage whiteKnight;
-  late AssetImage whiteRook;
-  late AssetImage whitePawn;
-  late AssetImage blackKing;
-  late AssetImage blackQueen;
-  late AssetImage blackBishop;
-  late AssetImage blackKnight;
-  late AssetImage blackRook;
-  late AssetImage blackPawn;
-  late AssetImage noPiece;
-  late AssetImage woodGrainDark;
-  late AssetImage woodGrainLight;
+  String puzzlePath = "assets/chessPuzzles/";
+  String chessPiecePath = "assets/chessThemes/pieces/set1/";
+  String boardTilesPath = "assets/chessThemes/board/set0/";
 
   late String puzzleFile;
 
   AppThemeData() {
-    squareHeight = squareWidth = 45;
-    themeColor = Colors.deepPurple;
-    darkSquare = const Color.fromRGBO(0x99, 0x99, 0xcc, 100);
-    lightSquare = const Color.fromRGBO(0xee, 0xee, 0xff, 100);
     loadAssets();
   }
 
   ThemeData get materialTheme {
     return ThemeData(
-      primaryColor: themeColor,
+      primaryColor: Colors.black,
     );
   }
 
   loadAssets() {
-    whiteKing = AssetImage(chessPiecePath + 'whiteKing.png');
-    whiteQueen = AssetImage(chessPiecePath + 'whiteQueen.png');
-    whiteBishop = AssetImage(chessPiecePath + 'whiteBishop.png');
-    whiteKnight = AssetImage(chessPiecePath + 'whiteKnight.png');
-    whiteRook = AssetImage(chessPiecePath + 'whiteRook.png');
-    whitePawn = AssetImage(chessPiecePath + 'whitePawn.png');
-    blackKing = AssetImage(chessPiecePath + 'blackKing.png');
-    blackQueen = AssetImage(chessPiecePath + 'blackQueen.png');
-    blackBishop = AssetImage(chessPiecePath + 'blackBishop.png');
-    blackKnight = AssetImage(chessPiecePath + 'blackKnight.png');
-    blackRook = AssetImage(chessPiecePath + 'blackRook.png');
-    blackPawn = AssetImage(chessPiecePath + 'blackPawn.png');
-
-    noPiece = AssetImage(commonPath + 'empty.png');
-    woodGrainDark = AssetImage(boardTilesPath + 'woodGrainDark.png');
-    woodGrainLight = AssetImage(boardTilesPath + 'woodGrainLight.png');
     puzzleFile = puzzlePath + 'puzzles.csv';
   }
-}
-
-Column drawChessBoard(BoardData boardData) {
-  List<Row> board = [];
-  List<Container> square = [];
-
-  int colA = "A".codeUnitAt(0);
-  int colH = "H".codeUnitAt(0);
-
-  // generate 64 containers
-  // into 8 rows (8*8)
-  int row = 7;
-
-  while (row >= 0) {
-    // build rows from A8 down to A1
-    int col = colA;
-    square = []; // reset list
-    while (col <= colH) {
-      late AssetImage thisPiece;
-      String contents = boardData.board[row][col - colA].contents;
-
-      if (contents == "K") thisPiece = appThemeData.whiteKing;
-      if (contents == "Q") thisPiece = appThemeData.whiteQueen;
-      if (contents == "R") thisPiece = appThemeData.whiteRook;
-      if (contents == "B") thisPiece = appThemeData.whiteBishop;
-      if (contents == "N") thisPiece = appThemeData.whiteKnight;
-      if (contents == "P") thisPiece = appThemeData.whitePawn;
-
-      if (contents == "k") thisPiece = appThemeData.blackKing;
-      if (contents == "q") thisPiece = appThemeData.blackQueen;
-      if (contents == "r") thisPiece = appThemeData.blackRook;
-      if (contents == "b") thisPiece = appThemeData.blackBishop;
-      if (contents == "n") thisPiece = appThemeData.blackKnight;
-      if (contents == "p") thisPiece = appThemeData.blackPawn;
-
-      if (contents == " ") thisPiece = appThemeData.noPiece;
-
-      AssetImage squareBg = appThemeData.woodGrainLight;
-      if ((row + col) % 2 != 0) squareBg = appThemeData.woodGrainDark;
-
-      square.add(
-        Container(
-          width: appThemeData.squareHeight,
-          child: AspectRatio(
-            aspectRatio: 1.0,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: squareBg,
-                  //opacity: 0.10,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Draggable(
-                child: Image(
-                  image: thisPiece,
-                  height: appThemeData.squareHeight,
-                  width: appThemeData.squareWidth,
-                ),
-                feedback: Image(
-                  image: thisPiece,
-                  height: appThemeData.squareHeight * 1.25,
-                  width: appThemeData.squareWidth * 1.25,
-                ),
-                data: [
-                  contents,
-                  row,
-                  col,
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-      col++;
-    }
-    board.add(
-      Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: square,
-      ),
-    );
-    row--;
-  }
-
-  return Column(children: board);
 }
 
 var appThemeData = AppThemeData();
@@ -173,22 +40,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  BoardData boardData = BoardData();
+
+  ChessBoard chessBoard = ChessBoard(appThemeData.chessPiecePath, appThemeData.boardTilesPath);
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
     DesktopWindow.setWindowSize(const Size(700, 1200));
-    boardData.SetPosition(appThemeData.normalStartPosition);
+    chessBoard.boardData.resetPosition();
     chessPuzzles.loadPuzzles(appThemeData.puzzleFile);
   }
 
   void _onClick(String pressed) {
     setState(() {
       if (pressed == 'Next') {
-        boardData.SetPosition(chessPuzzles.getNextPuzzle());
+        chessBoard.boardData.SetPosition(chessPuzzles.getNextPuzzle());
       }
       if (pressed == 'Stop') {
-        boardData.SetPosition(appThemeData.normalStartPosition);
+        chessBoard.boardData.resetPosition();
       }
     });
   }
@@ -196,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     Color turnColor = Colors.white;
-    if (boardData.playersTurn == "b") turnColor = Colors.black;
+    if (chessBoard.boardData.playersTurn == "b") turnColor = Colors.black;
 
     return MaterialApp(
       theme: appThemeData.materialTheme,
@@ -240,7 +108,7 @@ class _MyAppState extends State<MyApp> {
                   height: 10,
                 ),
               ]),
-              drawChessBoard(boardData),
+              chessBoard.drawChessBoard(),
             ],
           ),
         ),

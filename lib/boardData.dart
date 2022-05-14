@@ -4,6 +4,8 @@ class BoardData {
   List<List> board = [];
   List<Square> column = [];
 
+  String normalStartPosition =
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   String playersTurn = "w";
 
   bool whiteCastleKingSide = false;
@@ -39,6 +41,7 @@ class BoardData {
       }
       board.add(column);
     }
+    resetPosition();
   }
 
   Move(String myMove) {
@@ -72,6 +75,9 @@ class BoardData {
     board[fromX][fromY].contents = piece['Empty'];
   }
 
+  void resetPosition() {
+    SetPosition(normalStartPosition);
+  }
   void SetPosition(String fen) {
     int row = 7;
     int col = 0;
