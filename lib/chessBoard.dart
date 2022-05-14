@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'boardData.dart';
-import 'chessPuzzles.dart';
 
 class ChessTheme {
   late AssetImage whiteKing;
@@ -52,6 +51,11 @@ class ChessBoard {
     boardData = BoardData();
     chessTheme = ChessTheme(chessPiecePath, boardTilesPath);
     boardSquareSize = Size(50, 50);
+  }
+
+  get turnColor {
+    if (boardData.playersTurn == "b") return Colors.black;
+    else return Colors.white;
   }
 
   Column drawChessBoard() {

@@ -7,7 +7,7 @@ void main() {
   runApp(const MyApp());
 }
 
-class AppThemeData {
+class AppData {
   String commonPath = "assets/";
   String puzzlePath = "assets/chessPuzzles/";
   String chessPiecePath = "assets/chessThemes/pieces/set1/";
@@ -15,8 +15,8 @@ class AppThemeData {
 
   late String puzzleFile;
 
-  AppThemeData() {
-    loadAssets();
+  AppData() {
+    puzzleFile = puzzlePath + 'puzzles.csv';
   }
 
   ThemeData get materialTheme {
@@ -24,13 +24,9 @@ class AppThemeData {
       primaryColor: Colors.black,
     );
   }
-
-  loadAssets() {
-    puzzleFile = puzzlePath + 'puzzles.csv';
-  }
 }
 
-var appThemeData = AppThemeData();
+var appData = AppData();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -41,13 +37,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  ChessBoard chessBoard = ChessBoard(appThemeData.chessPiecePath, appThemeData.boardTilesPath);
+  ChessBoard chessBoard = ChessBoard(appData.chessPiecePath, appData.boardTilesPath);
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
     DesktopWindow.setWindowSize(const Size(700, 1200));
+    chessBoard.boardSquareSize = Size(40,40);
     chessBoard.boardData.resetPosition();
-    chessPuzzles.loadPuzzles(appThemeData.puzzleFile);
+    chessPuzzles.loadPuzzles(appData.puzzleFile);
   }
 
   void _onClick(String pressed) {
@@ -63,11 +60,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    Color turnColor = Colors.white;
-    if (chessBoard.boardData.playersTurn == "b") turnColor = Colors.black;
 
     return MaterialApp(
-      theme: appThemeData.materialTheme,
+      theme: appData.materialTheme,
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -88,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                       width: 20.0,
                       height: 20.0,
                       decoration: BoxDecoration(
-                        color: turnColor,
+                        color: chessBoard.turnColor,
                         shape: BoxShape.circle,
                       ),
                     ),
