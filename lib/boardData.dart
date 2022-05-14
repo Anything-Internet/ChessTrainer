@@ -5,7 +5,7 @@ class BoardData {
   List<Square> column = [];
 
   String normalStartPosition =
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   String playersTurn = "w";
 
   bool whiteCastleKingSide = false;
@@ -13,8 +13,8 @@ class BoardData {
   bool blackCastleKingSide = false;
   bool blackCastleQueenSide = false;
   String enPassant = "-";
-  int HalfMoveClock = 0;
-  int FullMoveNumber = 1;
+  int halfMoveClock = 0;
+  int fullMoveNumber = 1;
 
   Map piece = {
     "WhiteKing": "\u2654",
@@ -44,7 +44,7 @@ class BoardData {
     resetPosition();
   }
 
-  Move(String myMove) {
+  move(String myMove) {
     // remove optional spaces
     myMove = myMove.replaceAll(' ', '');
     myMove = myMove.toUpperCase();
@@ -66,26 +66,27 @@ class BoardData {
     int toY = parms[2].codeUnits.first - 'A'.codeUnits.first;
     int toX = int.parse(parms[3]) - 1;
 
-    MakeMove(fromX, fromY, toX, toY);
+    makeMove(fromX, fromY, toX, toY);
   }
 
-  MakeMove(int fromX, int fromY, int toX, int toY) {
+  makeMove(int fromX, int fromY, int toX, int toY) {
     board[toX][toY].contents = board[fromX][fromY].contents;
 
     board[fromX][fromY].contents = piece['Empty'];
   }
 
   void resetPosition() {
-    SetPosition(normalStartPosition);
+    setPosition(normalStartPosition);
   }
-  void SetPosition(String fen) {
+
+  void setPosition(String fen) {
     int row = 7;
     int col = 0;
 
     var fenArray = fen.split(' ');
     var fenPos = fenArray[0].split('');
 
-    fenPos.forEach((element) {
+    for (var element in fenPos) {
       switch (element) {
         case "/":
           row--;
@@ -117,7 +118,7 @@ class BoardData {
           }
       }
       ; // end switch
-    });
+    }
 
     if (fenArray.length != 6) return;
 
@@ -136,8 +137,8 @@ class BoardData {
     if (fenArray[2].contains("q")) blackCastleQueenSide = true;
 
     enPassant = fenArray[3];
-    HalfMoveClock = int.parse(fenArray[4]);
-    FullMoveNumber = int.parse(fenArray[5]);
+    halfMoveClock = int.parse(fenArray[4]);
+    fullMoveNumber = int.parse(fenArray[5]);
   }
 
   printBoard() {
@@ -176,12 +177,11 @@ class BoardData {
     if (blackCastleKingSide) stdout.write("k");
     if (blackCastleQueenSide) stdout.write("q");
     stdout.write(" EP:$enPassant");
-    stdout.write(" MV:$HalfMoveClock/$FullMoveNumber");
+    stdout.write(" MV:$halfMoveClock/$fullMoveNumber");
     print("");
   }
 
   String get fen {
-    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     var fenStr = "";
 
     for (int y = 7; y >= 0; y--) {
@@ -203,14 +203,14 @@ class BoardData {
       fenStr = fenStr.replaceAll(" ", "1");
     }
 
-    fenStr += " ${playersTurn} ";
+    fenStr += " $playersTurn ";
 
     if (whiteCastleKingSide) fenStr += "K";
     if (whiteCastleQueenSide) fenStr += "Q";
     if (blackCastleKingSide) fenStr += "k";
     if (blackCastleQueenSide) fenStr += "q";
 
-    fenStr += " ${enPassant} ${HalfMoveClock} ${FullMoveNumber}";
+    fenStr += " $enPassant $halfMoveClock $fullMoveNumber";
 
     return fenStr;
   }

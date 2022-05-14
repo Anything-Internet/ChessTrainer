@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
   void _onClick(String pressed) {
     setState(() {
       if (pressed == 'Next') {
-        chessBoard.boardData.SetPosition(chessPuzzles.getNextPuzzle());
+        chessBoard.boardData.setPosition(chessPuzzles.getNextPuzzle());
       }
       if (pressed == 'Stop') {
         chessBoard.boardData.resetPosition();

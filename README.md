@@ -1,16 +1,11 @@
 # chesstrainer
 
-A new Flutter project.
+This is a chess trainer program.  It shows chess puzzles and will track results.  
+The ultimate goal is for a coach to send you puzzles and assess your results.
 
-## Getting Started
+It's a pet project at this time and is built using Dart and Flutter.  It is designed
+to work on Windows, Mac, Android, iPhone, and Web platforms.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+I intend to add support for StockFish and integrate it into chess.com and lichess.org
+so it can download and analyze games.  Then share all that information with a chess
+coach via a Firebase database.
