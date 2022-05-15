@@ -39,20 +39,17 @@ class ChessTheme {
   }
 }
 
-class ChessBoard {
+class ChessBoard extends BoardData {
   late Size boardSquareSize;
   late ChessTheme chessTheme;
-  late String normalStartPosition;
-  late BoardData boardData;
 
   ChessBoard(String chessPiecePath, String boardTilesPath) {
-    boardData = BoardData();
     chessTheme = ChessTheme(chessPiecePath, boardTilesPath);
     boardSquareSize = const Size(50, 50);
   }
 
   get turnColor {
-    if (boardData.playersTurn == "b") {
+    if (playersTurn == "b") {
       return Colors.black;
     } else {
       return Colors.white;
@@ -60,8 +57,8 @@ class ChessBoard {
   }
 
   Column drawChessBoard() {
-    List<Row> board = [];
-    List<Container> square = [];
+    List<Row> boardRows = [];
+    List<Container> boardSquares = [];
 
     int colA = "A".codeUnitAt(0);
     int colH = "H".codeUnitAt(0);
@@ -73,10 +70,10 @@ class ChessBoard {
     while (row >= 0) {
       // build rows from A8 down to A1
       int col = colA;
-      square = []; // reset list
+      boardSquares = []; // reset list
       while (col <= colH) {
         late AssetImage thisPiece;
-        String contents = boardData.board[row][col - colA].contents;
+        String contents = boardDataArray[row][col - colA].contents;
 
         if (contents == "K") thisPiece = chessTheme.whiteKing;
         if (contents == "Q") thisPiece = chessTheme.whiteQueen;
@@ -97,7 +94,7 @@ class ChessBoard {
         AssetImage squareBg = chessTheme.lightSquare;
         if ((row + col) % 2 != 0) squareBg = chessTheme.darkSquare;
 
-        square.add(
+        boardSquares.add(
           Container(
             width: boardSquareSize.width,
             child: AspectRatio(
@@ -133,16 +130,16 @@ class ChessBoard {
         );
         col++;
       }
-      board.add(
+      boardRows.add(
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: square,
+          children: boardSquares,
         ),
       );
       row--;
     }
 
-    return Column(children: board);
+    return Column(children: boardRows);
   }
 }

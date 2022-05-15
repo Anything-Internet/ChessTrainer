@@ -16,7 +16,7 @@ class AppData {
   late String puzzleFile;
 
   AppData() {
-    puzzleFile = puzzlePath + 'puzzles.csv';
+    puzzleFile = '${puzzlePath}puzzles.csv';
   }
 
   ThemeData get materialTheme {
@@ -36,31 +36,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  ChessBoard chessBoard = ChessBoard(appData.chessPiecePath, appData.boardTilesPath);
+  ChessBoard chessBoard =
+      ChessBoard(appData.chessPiecePath, appData.boardTilesPath);
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
     DesktopWindow.setWindowSize(const Size(700, 1200));
-    chessBoard.boardSquareSize = Size(40,40);
-    chessBoard.boardData.resetPosition();
+    chessBoard.boardSquareSize = const Size(40, 40);
+    chessBoard.resetPosition();
     chessPuzzles.loadPuzzles(appData.puzzleFile);
   }
 
   void _onClick(String pressed) {
     setState(() {
       if (pressed == 'Next') {
-        chessBoard.boardData.setPosition(chessPuzzles.getNextPuzzle());
+        chessBoard.setPosition(chessPuzzles.getNextPuzzle());
       }
       if (pressed == 'Stop') {
-        chessBoard.boardData.resetPosition();
+        chessBoard.resetPosition();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       theme: appData.materialTheme,
       home: Scaffold(

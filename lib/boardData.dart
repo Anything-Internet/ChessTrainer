@@ -1,7 +1,5 @@
-import "dart:io";
-
 class BoardData {
-  List<List> board = [];
+  List<List> boardDataArray = [];
   List<Square> column = [];
 
   String normalStartPosition =
@@ -16,22 +14,6 @@ class BoardData {
   int halfMoveClock = 0;
   int fullMoveNumber = 1;
 
-  Map piece = {
-    "WhiteKing": "\u2654",
-    "WhiteQueen": "\u2655",
-    "WhiteRook": "\u2656",
-    "WhiteBishop": "\u2657",
-    "WhiteKnight": "\u2658",
-    "WhitePawn": "\u2659",
-    "BlackKing": "\u265A",
-    "BlackQueen": "\u265B",
-    "BlackRook": "\u265C",
-    "BlackBishop": "\u265D",
-    "BlackKnight": "\u265E",
-    "BlackPawn": "\u265F",
-    "Empty": " ",
-  };
-
   BoardData() {
     for (var col = 0; col < 8; col++) {
       column = []; // reset to build next row.
@@ -39,7 +21,7 @@ class BoardData {
       for (var row = 0; row < 8; row++) {
         column.add(Square(col, row));
       }
-      board.add(column);
+      boardDataArray.add(column);
     }
     resetPosition();
   }
@@ -70,9 +52,9 @@ class BoardData {
   }
 
   makeMove(int fromX, int fromY, int toX, int toY) {
-    board[toX][toY].contents = board[fromX][fromY].contents;
+    boardDataArray[toX][toY].contents = boardDataArray[fromX][fromY].contents;
 
-    board[fromX][fromY].contents = piece['Empty'];
+    boardDataArray[fromX][fromY].contents = ' ';
   }
 
   void resetPosition() {
@@ -105,7 +87,7 @@ class BoardData {
         case 'n':
         case 'r':
         case 'p':
-          board[row][col++].contents = element;
+          boardDataArray[row][col++].contents = element;
           break;
 
         default: // numerics
@@ -113,7 +95,7 @@ class BoardData {
           int x2 = int.parse(element);
 
           while (x1 < x2) {
-            board[row][col++].contents = " ";
+            boardDataArray[row][col++].contents = " ";
             x1++;
           }
       }
@@ -141,55 +123,15 @@ class BoardData {
     fullMoveNumber = int.parse(fenArray[5]);
   }
 
-  printBoard() {
-    print("   ---------------------------------");
-    for (var y = 7; y >= 0; y--) {
-      stdout.write(" ${y + 1} ");
-      for (var x = 0; x < 8; x++) {
-        stdout.write("| ");
-        if (board[y][x].contents == "K") stdout.write(piece['WhiteKing']);
-        if (board[y][x].contents == "Q") stdout.write(piece['WhiteQueen']);
-        if (board[y][x].contents == "B") stdout.write(piece['WhiteBishop']);
-        if (board[y][x].contents == "N") stdout.write(piece['WhiteKnight']);
-        if (board[y][x].contents == "R") stdout.write(piece['WhiteRook']);
-        if (board[y][x].contents == "P") stdout.write(piece['WhitePawn']);
-
-        if (board[y][x].contents == "k") stdout.write(piece['BlackKing']);
-        if (board[y][x].contents == "q") stdout.write(piece['BlackQueen']);
-        if (board[y][x].contents == "b") stdout.write(piece['BlackBishop']);
-        if (board[y][x].contents == "n") stdout.write(piece['BlackKnight']);
-        if (board[y][x].contents == "r") stdout.write(piece['BlackRook']);
-        if (board[y][x].contents == "p") stdout.write(piece['BlackPawn']);
-        if (board[y][x].contents == " ") stdout.write(piece['Empty']);
-
-        stdout.write(" ");
-      }
-      print("|");
-      print("   ---------------------------------");
-    }
-    print("     A   B   C   D   E   F   G   H  \n");
-
-    stdout.write("Turn:${playersTurn} ");
-
-    stdout.write("CA:");
-    if (whiteCastleKingSide) stdout.write("K");
-    if (whiteCastleQueenSide) stdout.write("Q");
-    if (blackCastleKingSide) stdout.write("k");
-    if (blackCastleQueenSide) stdout.write("q");
-    stdout.write(" EP:$enPassant");
-    stdout.write(" MV:$halfMoveClock/$fullMoveNumber");
-    print("");
-  }
-
   String get fen {
     var fenStr = "";
 
     for (int y = 7; y >= 0; y--) {
       for (int x = 0; x <= 7; x++) {
-        if (board[y][x].contents == ' ') {
+        if (boardDataArray[y][x].contents == ' ') {
           fenStr += " ";
         } else {
-          fenStr += board[y][x].contents;
+          fenStr += boardDataArray[y][x].contents;
         }
       }
       if (y > 0) fenStr += "/";
