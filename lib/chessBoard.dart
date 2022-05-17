@@ -41,7 +41,6 @@ class ChessTheme {
 
     darkSquare = '${boardTilesPath}darkSquare.png';
     lightSquare = '${boardTilesPath}lightSquare.png';
-
   }
 }
 
