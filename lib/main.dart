@@ -10,7 +10,7 @@ void main() {
 class AppData {
   String commonPath = "assets/";
   String puzzlePath = "assets/chessPuzzles/";
-  String chessPiecePath = "assets/chessThemes/pieces/set1/";
+  String chessPiecePath = "assets/chessThemes/pieces/set2/";
   String boardTilesPath = "assets/chessThemes/board/set0/";
 
   late String puzzleFile;

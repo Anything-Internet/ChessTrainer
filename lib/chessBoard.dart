@@ -1,41 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'boardData.dart';
 
 class ChessTheme {
-  late AssetImage whiteKing;
-  late AssetImage whiteQueen;
-  late AssetImage whiteRook;
-  late AssetImage whiteBishop;
-  late AssetImage whiteKnight;
-  late AssetImage whitePawn;
+  late String whiteKing;
+  late String whiteQueen;
+  late String whiteRook;
+  late String whiteBishop;
+  late String whiteKnight;
+  late String whitePawn;
 
-  late AssetImage blackKing;
-  late AssetImage blackQueen;
-  late AssetImage blackRook;
-  late AssetImage blackBishop;
-  late AssetImage blackKnight;
-  late AssetImage blackPawn;
+  late String blackKing;
+  late String blackQueen;
+  late String blackRook;
+  late String blackBishop;
+  late String blackKnight;
+  late String blackPawn;
 
-  late AssetImage noPiece;
-  late AssetImage lightSquare;
-  late AssetImage darkSquare;
+  late String noPiece;
+  late String lightSquare;
+  late String darkSquare;
+
+  Color lightSquareColor = const Color.fromRGBO(0xff, 0xff, 0xdd, 100);
+  Color darkSquareColor = const Color.fromRGBO(0x33, 0x99, 0x00, 100);
 
   ChessTheme(String chessPiecePath, String boardTilesPath) {
-    whiteKing = AssetImage('${chessPiecePath}whiteKing.png');
-    whiteQueen = AssetImage('${chessPiecePath}whiteQueen.png');
-    whiteBishop = AssetImage('${chessPiecePath}whiteBishop.png');
-    whiteKnight = AssetImage('${chessPiecePath}whiteKnight.png');
-    whiteRook = AssetImage('${chessPiecePath}whiteRook.png');
-    whitePawn = AssetImage('${chessPiecePath}whitePawn.png');
-    blackKing = AssetImage('${chessPiecePath}blackKing.png');
-    blackQueen = AssetImage('${chessPiecePath}blackQueen.png');
-    blackBishop = AssetImage('${chessPiecePath}blackBishop.png');
-    blackKnight = AssetImage('${chessPiecePath}blackKnight.png');
-    blackRook = AssetImage('${chessPiecePath}blackRook.png');
-    blackPawn = AssetImage('${chessPiecePath}blackPawn.png');
-    noPiece = AssetImage('${chessPiecePath}nothing.png');
-    darkSquare = AssetImage('${boardTilesPath}darkSquare.png');
-    lightSquare = AssetImage('${boardTilesPath}lightSquare.png');
+    whiteKing = '${chessPiecePath}whiteKing.svg';
+    whiteQueen = '${chessPiecePath}whiteQueen.svg';
+    whiteBishop = '${chessPiecePath}whiteBishop.svg';
+    whiteKnight = '${chessPiecePath}whiteKnight.svg';
+    whiteRook = '${chessPiecePath}whiteRook.svg';
+    whitePawn = '${chessPiecePath}whitePawn.svg';
+    blackKing = '${chessPiecePath}blackKing.svg';
+    blackQueen = '${chessPiecePath}blackQueen.svg';
+    blackBishop = '${chessPiecePath}blackBishop.svg';
+    blackKnight = '${chessPiecePath}blackKnight.svg';
+    blackRook = '${chessPiecePath}blackRook.svg';
+    blackPawn = '${chessPiecePath}blackPawn.svg';
+    noPiece = '${chessPiecePath}nothing.svg';
+
+    darkSquare = '${boardTilesPath}darkSquare.png';
+    lightSquare = '${boardTilesPath}lightSquare.png';
+
   }
 }
 
@@ -72,7 +78,7 @@ class ChessBoard extends BoardData {
       int col = colA;
       boardSquares = []; // reset list
       while (col <= colH) {
-        late AssetImage thisPiece;
+        late String thisPiece;
         String contents = boardDataArray[row][col - colA].contents;
 
         if (contents == "K") thisPiece = chessTheme.whiteKing;
@@ -91,8 +97,14 @@ class ChessBoard extends BoardData {
 
         if (contents == " ") thisPiece = chessTheme.noPiece;
 
-        AssetImage squareBg = chessTheme.lightSquare;
-        if ((row + col) % 2 != 0) squareBg = chessTheme.darkSquare;
+        String squareBg = chessTheme.lightSquare;
+        Color squareBgColor = chessTheme.lightSquareColor;
+
+        if ((row + col) % 2 != 0) {
+          squareBg = chessTheme.darkSquare;
+          squareBgColor = chessTheme.darkSquareColor;
+        }
+        debugPrint("Tile: $squareBg");
 
         boardSquares.add(
           Container(
@@ -102,16 +114,19 @@ class ChessBoard extends BoardData {
               child: Container(
                 alignment: Alignment.bottomCenter,
                 decoration: BoxDecoration(
+                  color: squareBgColor,
                   image: DecorationImage(
-                    image: squareBg,
+                    image: AssetImage(squareBg),
                     fit: BoxFit.cover,
                   ),
+                  shape: BoxShape.rectangle,
                 ),
                 child: Draggable(
                   feedback: Image(
-                    image: thisPiece,
-                    height: boardSquareSize.height * 1.25,
-                    width: boardSquareSize.width * 1.25,
+                    image: Svg(
+                      thisPiece,
+                      size: boardSquareSize,
+                    ),
                   ),
                   data: [
                     contents,
@@ -119,9 +134,10 @@ class ChessBoard extends BoardData {
                     col,
                   ],
                   child: Image(
-                    image: thisPiece,
-                    height: boardSquareSize.height,
-                    width: boardSquareSize.width,
+                    image: Svg(
+                      thisPiece,
+                      size: boardSquareSize,
+                    ),
                   ),
                 ),
               ),
@@ -130,6 +146,7 @@ class ChessBoard extends BoardData {
         );
         col++;
       }
+
       boardRows.add(
         Row(
           mainAxisSize: MainAxisSize.max,
@@ -139,7 +156,6 @@ class ChessBoard extends BoardData {
       );
       row--;
     }
-
     return Column(children: boardRows);
   }
 }
