@@ -24,6 +24,7 @@ class ChessTheme {
 
   Color lightSquareColor = const Color.fromRGBO(0xff, 0xff, 0xdd, 100);
   Color darkSquareColor = const Color.fromRGBO(0x33, 0x99, 0x00, 100);
+  Color boardBorder =  Colors.brown.shade700;
 
   Size _boardSquareSize = Size(20, 20);
   Size _boardSize = Size(200, 200);
@@ -148,6 +149,8 @@ class _ChessBoardState extends State<ChessBoard> {
 
     return Container(
       width: maxSize.width,
+      padding: EdgeInsets.all(10),
+      color: chessTheme.boardBorder,
       alignment: Alignment.topLeft,
       constraints: BoxConstraints(
         maxHeight: max,
@@ -213,7 +216,7 @@ class buildSquare extends StatelessWidget {
         child: Container(
           alignment: Alignment.bottomCenter,
           decoration: BoxDecoration(
-            color: squareBgColor,
+            //color: squareBgColor,
             image: DecorationImage(
               image: AssetImage(squareBg),
               fit: BoxFit.cover,
