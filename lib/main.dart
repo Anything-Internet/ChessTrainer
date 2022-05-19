@@ -37,6 +37,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   ChessBoard chessBoard = ChessBoard();
   ChessPuzzles chessPuzzles = ChessPuzzles();
+  int count = 0;
 
   _MyAppState() {
     //DesktopWindow.setWindowSize(const Size(700, 1200));
@@ -104,7 +105,7 @@ class _MyAppState extends State<MyApp> {
                 direction: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  chessBoard,
+                  ChessBoard(key: ValueKey(count++)),
                 ],
               ),
             ],
