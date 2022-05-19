@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:desktop_window/desktop_window.dart';
 import 'package:chesstrainer/chessBoard.dart';
 import 'chessPuzzles.dart';
 
@@ -36,13 +35,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ChessBoard chessBoard =
-      ChessBoard(appData.chessPiecePath, appData.boardTilesPath);
+  ChessBoard chessBoard = ChessBoard();
   ChessPuzzles chessPuzzles = ChessPuzzles();
 
   _MyAppState() {
-    DesktopWindow.setWindowSize(const Size(700, 1200));
-    chessBoard.boardSquareSize = const Size(40, 40);
+    //DesktopWindow.setWindowSize(const Size(700, 1200));
+    //chessBoard.boardSquareSize = Size(20,20);
     chessBoard.resetPosition();
     chessPuzzles.loadPuzzles(appData.puzzleFile);
   }
@@ -102,7 +100,13 @@ class _MyAppState extends State<MyApp> {
                   height: 10,
                 ),
               ]),
-              chessBoard.drawChessBoard(),
+              Flex(
+                direction: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  chessBoard,
+                ],
+              ),
             ],
           ),
         ),

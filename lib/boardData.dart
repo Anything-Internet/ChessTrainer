@@ -13,6 +13,7 @@ class BoardData {
   String enPassant = "-";
   int halfMoveClock = 0;
   int fullMoveNumber = 1;
+  Function? _refresh;
 
   BoardData() {
     for (var col = 0; col < 8; col++) {
@@ -23,7 +24,17 @@ class BoardData {
       }
       boardDataArray.add(column);
     }
-    resetPosition();
+    //resetPosition();
+  }
+
+  set refresh(fun) {
+    _refresh = fun;
+  }
+
+  dirty() {
+    if (_refresh != null) {
+      _refresh!();
+    }
   }
 
   move(String myMove) {
@@ -55,6 +66,7 @@ class BoardData {
     boardDataArray[toX][toY].contents = boardDataArray[fromX][fromY].contents;
 
     boardDataArray[fromX][fromY].contents = ' ';
+    dirty();
   }
 
   void resetPosition() {
@@ -121,6 +133,7 @@ class BoardData {
     enPassant = fenArray[3];
     halfMoveClock = int.parse(fenArray[4]);
     fullMoveNumber = int.parse(fenArray[5]);
+    dirty();
   }
 
   String get fen {
