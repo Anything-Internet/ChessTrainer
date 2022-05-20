@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chesstrainer/ChessBoard.dart';
+import 'package:chesstrainer/ChessBoard/ChessBoard.dart';
 import 'ChessPuzzles.dart';
 
 void main() {

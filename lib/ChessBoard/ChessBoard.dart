@@ -125,11 +125,11 @@ class _BuildSquareState extends State<BuildSquare> {
     ImageProvider noPiece = chessTheme.chessPiece[" "];
 
     ImageProvider squareBg = chessTheme.lightSquare;
-    Color squareBgColor = chessTheme.lightSquareColor;
+    //Color squareBgColor = chessTheme.lightSquareColor;
 
     if ((row + col) % 2 != 0) {
       squareBg = chessTheme.darkSquare;
-      squareBgColor = chessTheme.darkSquareColor;
+      //squareBgColor = chessTheme.darkSquareColor;
     }
 
     return GestureDetector(
