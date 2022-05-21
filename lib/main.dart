@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ChessBoard chessBoard = ChessBoard();
+  ChessBoard chessBoard = const ChessBoard();
   ChessPuzzles chessPuzzles = ChessPuzzles();
   int count = 0;
 
@@ -105,8 +105,21 @@ class _MyAppState extends State<MyApp> {
                 direction: Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ChessBoard(key: ValueKey(count++)),
+                  Row(
+                    children: [
+                      ChessBoard(key: ValueKey(count++)),
+                    ],
+                  ),
                 ],
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "FEN: ${boardData.fen}",
+                    softWrap: true,
+                  ),
+                ),
               ),
             ],
           ),

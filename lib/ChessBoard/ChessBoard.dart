@@ -8,8 +8,8 @@ ChessTheme chessTheme =
     ChessTheme(appData.chessPiecePath, appData.boardTilesPath);
 BoardData boardData = BoardData();
 
-var myEvent = Event();
-myEvent.broadcast();
+var screenUpdate = Event();
+
 
 class ChessBoard extends StatefulWidget {
   const ChessBoard({Key? key}) : super(key: key);
@@ -74,6 +74,10 @@ class _ChessBoardState extends State<ChessBoard> {
     max = max * 0.65; // patch for Windows app to fit.
 
     chessTheme.boardSize = Size(max, max);
+
+    //screenUpdate.broadcast();
+    //screenUpdate.subscribe((args) => catchGesture());
+
   }
 
   @override
@@ -125,6 +129,8 @@ class _BuildSquareState extends State<BuildSquare> {
     debugPrint("Gesture: $row $col");
     setState(() {});
   }
+
+
 
   @override
   Widget build(BuildContext context) {
