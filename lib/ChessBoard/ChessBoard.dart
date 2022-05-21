@@ -1,11 +1,15 @@
 import 'package:chesstrainer/main.dart';
 import 'package:flutter/material.dart';
+import 'package:event/event.dart';
 import 'BoardData.dart';
 import 'ChessTheme.dart';
 
 ChessTheme chessTheme =
     ChessTheme(appData.chessPiecePath, appData.boardTilesPath);
 BoardData boardData = BoardData();
+
+var myEvent = Event();
+myEvent.broadcast();
 
 class ChessBoard extends StatefulWidget {
   const ChessBoard({Key? key}) : super(key: key);
@@ -55,6 +59,11 @@ class _ChessBoardState extends State<ChessBoard> {
       }
     }
     return (squares[0]);
+  }
+
+  catchGesture() {
+    debugPrint("Board Gesture: ");
+    setState(() {});
   }
 
   resize() {
@@ -132,38 +141,49 @@ class _BuildSquareState extends State<BuildSquare> {
       //squareBgColor = chessTheme.darkSquareColor;
     }
 
-    return GestureDetector(
-      //onTap: catchGesture(row: row, col: col),
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          decoration: BoxDecoration(
-            //color: squareBgColor,
-            image: DecorationImage(
-              image: squareBg,
-              fit: BoxFit.cover,
-            ),
-            shape: BoxShape.rectangle,
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child:
+
+
+      Container(
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+          //color: squareBgColor,
+          image: DecorationImage(
+            image: squareBg,
+            fit: BoxFit.cover,
           ),
-          child: Draggable(
-            data: [
-              contents,
-              row,
-              col,
-            ],
-            feedback: Image(
-              image: thisPiece,
-            ),
-            childWhenDragging: Image(
-              image: noPiece,
-            ),
-            child: Image(
-              image: thisPiece,
-            ),
+          shape: BoxShape.rectangle,
+        ),
+        child:
+
+
+
+        Draggable(
+          data: [
+            contents,
+            row,
+            col,
+          ],
+          feedback: Image(
+            image: thisPiece,
+          ),
+          childWhenDragging: Image(
+            image: noPiece,
+          ),
+          child: Image(
+            image: thisPiece,
           ),
         ),
+
+
+
       ),
+
+
+
+
     );
   }
 }
