@@ -21,7 +21,7 @@ class ChessPuzzles {
     if (inputFile == "")  return;
 
     String fileData = await rootBundle.loadString(inputFile);
-    List<String> fileRows = fileData.split("\r\n");
+    List<String> fileRows = fileData.split("\n");
 
     int cnt = 0;
     for (var line in fileRows) {
